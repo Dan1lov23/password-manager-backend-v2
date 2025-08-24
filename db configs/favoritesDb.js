@@ -1,15 +1,11 @@
-const sqlite3 = require('sqlite3').verbose();
+const Database = require('better-sqlite3');
 
-const favoritesDb = new sqlite3.Database('../databases/favorites', (err) => {
-    if (err) {
-        console.error('Ошибка открытия базы данных ' + err.message);
-    } else {
-        console.log('Подключение к базе данных паролей успешно установлено.');
-    }
-});
+// Создание или открытие базы данных
+const favoritesDb = new Database('../databases/favorites.db', { verbose: console.log });
 
-favoritesDb.serialize(() => {
-    favoritesDb.run(`CREATE TABLE IF NOT EXISTS favorites (
+try {
+    // Создание таблицы, если она не существует
+    favoritesDb.exec(`CREATE TABLE IF NOT EXISTS favorites (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         serviceName TEXT,
         login TEXT,
@@ -17,6 +13,10 @@ favoritesDb.serialize(() => {
         passwordId TEXT,
         username TEXT
     )`);
-});
+    console.log('Подключение к базе данных избранных успешно установлено.');
+} catch (err) {
+    console.error('Ошибка открытия базы данных: ' + err.message);
+}
 
+// Экспорт базы данных для использования в других модулях
 module.exports = favoritesDb;
