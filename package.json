@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "preinstall": "npm uninstall sqlite3",
+    "postinstall": "npm install sqlite3 --build-from-source",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "private": true,
